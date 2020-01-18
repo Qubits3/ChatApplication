@@ -9,4 +9,7 @@
     <string name="chat">Chat</string>
     <string name="enter_your_message">Enter your message</string>
     <string name="send">Send</string>
+    <string name="chat_message">Chat Message</string>
+    <string name="enter_your_age">Enter your age</string>
+    <string name="upload">Upload</string>
 </resources>
