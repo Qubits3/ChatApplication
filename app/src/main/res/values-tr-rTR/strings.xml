@@ -8,4 +8,6 @@
     <string name="sign_up">Kayıt Ol</string>
     <string name="email">Email</string>
     <string name="chat">Chat</string>
+    <string name="enter_your_message">Mesajınızı girin</string>
+    <string name="send">Gönder</string>
 </resources>
