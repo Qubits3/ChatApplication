@@ -26,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.sign_up);
         setContentView(R.layout.activity_sign_up);
 
         emailText = findViewById(R.id.user_email_edit_text);
@@ -33,6 +34,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null){
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void signUp(View view) {
