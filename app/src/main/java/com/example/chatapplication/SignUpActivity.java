@@ -43,12 +43,13 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void signUp(View view) {
 
-        mAuth.createUserWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+        if (!emailText.getText().toString().equals("") && !passwordText.getText().toString().equals("")){
+            mAuth.createUserWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()){
+                            if (task.isSuccessful()){
 
 //                            FirebaseUser user = mAuth.getCurrentUser();
 //                            String userEmail = null;
@@ -56,30 +57,37 @@ public class SignUpActivity extends AppCompatActivity {
 //                                userEmail = user.getEmail();
 //                            }
 
-                            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                            startActivity(intent);
+                                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                                startActivity(intent);
 
-                        }else{
-                            Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException(), "Failed!").getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(), task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }else {
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.please_enter_your_email_and_password), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void SignIn(View view) {
 
-        mAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+        if (!emailText.getText().toString().equals("") && !passwordText.getText().toString().equals("")){
+            mAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()){
-                            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                            startActivity(intent);
-                        }else {
-                            Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException(), "Failed!").getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            if (task.isSuccessful()){
+                                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                                startActivity(intent);
+                            }else {
+                                Toast.makeText(getApplicationContext(), task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }else {
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.please_enter_your_email_and_password), Toast.LENGTH_LONG).show();
+        }
     }
 }

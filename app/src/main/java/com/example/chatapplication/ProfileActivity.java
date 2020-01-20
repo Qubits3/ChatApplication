@@ -106,45 +106,50 @@ public class ProfileActivity extends AppCompatActivity {
 
         StorageReference newReference = storageReference.child(imageName);
 
-        newReference.putFile(selected).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        if (!ageText.getText().toString().equals("") && selected != null){
+            newReference.putFile(selected).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("images/" + uuidImage + ".jpg");
-                //Sadece resmin URL sini almak için storage reference oluşturduk
+                    StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("images/" + uuidImage + ".jpg");
+                    //Sadece resmin URL sini almak için storage reference oluşturduk
 
-                profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
+                    profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
 
-                        String downloadURL = uri.toString();
+                            String downloadURL = uri.toString();
 
-                        UUID uuid = UUID.randomUUID();
-                        String uuidString = uuid.toString();
+                            UUID uuid = UUID.randomUUID();
+                            String uuidString = uuid.toString();
 
-                        String userAge = ageText.getText().toString();
+                            String userAge = ageText.getText().toString();
 
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        String userEmail = user.getEmail();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String userEmail = user.getEmail();
 
-                        databaseReference.child("Profiles").child(uuidString).child("userimageurl").setValue(downloadURL);
-                        databaseReference.child("Profiles").child(uuidString).child("userage").setValue(userAge);
-                        databaseReference.child("Profiles").child(uuidString).child("useremail").setValue(userEmail);
+                            databaseReference.child("Profiles").child(uuidString).child("userimageurl").setValue(downloadURL);
+                            databaseReference.child("Profiles").child(uuidString).child("userage").setValue(userAge);
+                            databaseReference.child("Profiles").child(uuidString).child("useremail").setValue(userEmail);
 
-                        Toast.makeText(getApplicationContext(), "Uploaded!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Uploaded!", Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                        startActivity(intent);
-                    }
-                });
+                            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                            startActivity(intent);
+                        }
+                    });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else {
+            Toast.makeText(getApplicationContext(), R.string.please_enter_your_age, Toast.LENGTH_LONG).show();
+        }
+
 
     }
 

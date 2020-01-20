@@ -13,4 +13,7 @@
     <string name="upload">Yükle</string>
     <string name="enter_your_age">Yaşınızı girin</string>
     <string name="chat_message">Chat mesajı</string>
+    <string name="please_enter_your_email_and_password">Lütfen email ve şifrenizi girin</string>
+    <string name="please_enter_your_age">Lütfen bir fotoğraf seçin ve yaşınızı girin</string>
+    <string name="you_can_not_send_empty_message">Boş mesaj gönderemezsin</string>
 </resources>

@@ -97,26 +97,30 @@ public class ChatActivity extends AppCompatActivity {
 
     public void sendMessage(View view) {
 
-        String messageToSend = messageText.getText().toString();
+        if (!messageText.getText().toString().trim().equals("")){
+            String messageToSend = messageText.getText().toString();
 
-        UUID uuid = UUID.randomUUID();
-        String uuidString = uuid.toString();
+            UUID uuid = UUID.randomUUID();
+            String uuidString = uuid.toString();
 
-        FirebaseUser user = mAuth.getCurrentUser();
+            FirebaseUser user = mAuth.getCurrentUser();
 
-        String userEmail = "";
-        if (user != null) {
-            userEmail = user.getEmail();
+            String userEmail = "";
+            if (user != null) {
+                userEmail = user.getEmail();
+            }
+
+            databaseReference.child("Chats").child(uuidString).child("usermessage").setValue(messageToSend);
+            databaseReference.child("Chats").child(uuidString).child("useremail").setValue(userEmail);
+            databaseReference.child("Chats").child(uuidString).child("userMessageTime").setValue(ServerValue.TIMESTAMP);
+
+            messageText.setText("");
+
+            getData();
+
+        }else {
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.you_can_not_send_empty_message), Toast.LENGTH_LONG).show();
         }
-
-        databaseReference.child("Chats").child(uuidString).child("usermessage").setValue(messageToSend);
-        databaseReference.child("Chats").child(uuidString).child("useremail").setValue(userEmail);
-        databaseReference.child("Chats").child(uuidString).child("userMessageTime").setValue(ServerValue.TIMESTAMP);
-
-        messageText.setText("");
-
-        getData();
-
     }
 
     public void getData() {
