@@ -10,14 +10,13 @@
         android:id="@+id/user_email_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
         android:layout_marginBottom="50dp"
+        android:autofillHints="@string/email"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/user_password_edit_text"
-        app:layout_constraintStart_toStartOf="@+id/user_password_edit_text"
-        android:autofillHints="@string/email" />
+        app:layout_constraintStart_toStartOf="@+id/user_password_edit_text" />
 
     <EditText
         android:id="@+id/user_password_edit_text"

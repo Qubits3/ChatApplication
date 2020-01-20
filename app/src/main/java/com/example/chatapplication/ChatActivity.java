@@ -24,6 +24,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.onesignal.OneSignal;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,17 +91,21 @@ public class ChatActivity extends AppCompatActivity {
         databaseReference = database.getReference();
 
         getData();
+
+        // OneSignal Initialization
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
     }
 
     @Override
-    public void onBackPressed() {
-
-    }
+    public void onBackPressed() {}
 
     public void sendMessage(View view) {
 
         if (!messageText.getText().toString().trim().equals("")){
-            String messageToSend = messageText.getText().toString();
+            final String messageToSend = messageText.getText().toString();
 
             UUID uuid = UUID.randomUUID();
             String uuidString = uuid.toString();
@@ -116,6 +124,37 @@ public class ChatActivity extends AppCompatActivity {
             messageText.setText("");
 
             getData();
+
+            //onesignal
+            DatabaseReference newReference = database.getReference("PlayerIDs");
+            newReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot ds : dataSnapshot.getChildren()){
+
+                        HashMap<String, String> hashMap = (HashMap<String, String>) ds.getValue();
+
+                        String playerID = hashMap.get("playerID");
+
+                        System.out.println("playerID: " + playerID);
+
+                        try {
+                            OneSignal.postNotification(new JSONObject("{'contents': {'en':'" + messageToSend + "'}, 'include_player_ids': ['" + playerID + "']}"), null);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
 
         }else {
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.you_can_not_send_empty_message), Toast.LENGTH_LONG).show();

@@ -14,12 +14,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.onesignal.OneSignal;
+
+import java.util.UUID;
 
 public class SignUpActivity extends AppCompatActivity {
 
     EditText emailText, passwordText;
 
     private FirebaseAuth mAuth;
+
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,8 @@ public class SignUpActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.user_password_edit_text);
 
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null){
@@ -49,11 +59,18 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()){
 
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            String userEmail = null;
-//                            if (user != null) {
-//                                userEmail = user.getEmail();
-//                            }
+                                //userId yi Firebase e kayıt et
+                                OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+                                    @Override
+                                    public void idsAvailable(String userId, String registrationId) {
+                                        System.out.println("UserID: " + userId);
+
+                                        UUID uuid = UUID.randomUUID();
+                                        String uuidString = uuid.toString();
+
+                                        databaseReference.child("PlayerIDs").child(uuidString).child("playerID").setValue(userId);
+                                    }
+                                });
 
                                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                                 startActivity(intent);
